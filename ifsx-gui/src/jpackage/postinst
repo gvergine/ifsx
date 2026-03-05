@@ -1,0 +1,9 @@
+#!/bin/sh
+# Post-installation script for ifsx-gui .deb package
+
+APPDIR=/opt/ifsx-gui
+
+# Create symlink in /usr/local/bin for convenience
+if [ -x "$APPDIR/bin/ifsx-gui" ]; then
+    ln -sf "$APPDIR/bin/ifsx-gui" /usr/local/bin/ifsx-gui 2>/dev/null || true
+fi

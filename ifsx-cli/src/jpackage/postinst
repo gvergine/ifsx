@@ -1,0 +1,19 @@
+#!/bin/sh
+# Post-installation script for ifsx .deb package
+
+# Install manpage
+MANDIR=/usr/share/man/man1
+APPDIR=/opt/ifsx
+
+MANFILE=$(find "$APPDIR" -name "ifsx.1" 2>/dev/null | head -1)
+if [ -n "$MANFILE" ]; then
+    mkdir -p "$MANDIR"
+    cp "$MANFILE" "$MANDIR/ifsx.1"
+    gzip -f "$MANDIR/ifsx.1" 2>/dev/null || true
+    mandb 2>/dev/null || true
+fi
+
+# Create symlink in /usr/local/bin for convenience
+if [ -x "$APPDIR/bin/ifsx" ]; then
+    ln -sf "$APPDIR/bin/ifsx" /usr/local/bin/ifsx 2>/dev/null || true
+fi

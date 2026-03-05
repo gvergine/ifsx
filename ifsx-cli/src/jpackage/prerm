@@ -1,0 +1,5 @@
+#!/bin/sh
+# Pre-removal script for ifsx .deb package
+
+rm -f /usr/share/man/man1/ifsx.1.gz 2>/dev/null || true
+rm -f /usr/local/bin/ifsx 2>/dev/null || true

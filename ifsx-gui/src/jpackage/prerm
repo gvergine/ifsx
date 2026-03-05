@@ -1,0 +1,4 @@
+#!/bin/sh
+# Pre-removal script for ifsx-gui .deb package
+
+rm -f /usr/local/bin/ifsx-gui 2>/dev/null || true

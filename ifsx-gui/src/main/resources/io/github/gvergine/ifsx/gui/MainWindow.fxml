@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="io.github.gvergine.ifsx.gui.MainController"
+            stylesheets="@style.css">
+
+    <!-- Menu Bar -->
+    <top>
+        <MenuBar>
+            <Menu text="File">
+                <MenuItem text="Open IFS for Inspection..." onAction="#onOpenIfs"
+                          accelerator="Shortcut+O"/>
+                <SeparatorMenuItem/>
+                <MenuItem text="Exit" onAction="#onExit" accelerator="Shortcut+Q"/>
+            </Menu>
+            <Menu text="Help">
+                <MenuItem text="About IFSX" onAction="#onAbout"/>
+            </Menu>
+        </MenuBar>
+    </top>
+
+    <!-- Three-tab layout -->
+    <center>
+        <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE">
+
+            <!-- ═══════════════════ EXTRACT TAB ═══════════════════ -->
+            <Tab text="Extract" closable="false">
+                <VBox styleClass="operation-tab" spacing="16">
+                    <padding><Insets top="24" right="28" bottom="16" left="28"/></padding>
+
+                    <Label text="Extract IFS Image" styleClass="tab-heading"/>
+
+                    <GridPane hgap="12" vgap="12">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="150" maxWidth="150" halignment="RIGHT"/>
+                            <ColumnConstraints hgrow="ALWAYS" fillWidth="true"/>
+                            <ColumnConstraints minWidth="90" maxWidth="90"/>
+                        </columnConstraints>
+
+                        <Label text="IFS File:" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                               styleClass="form-label"/>
+                        <TextField fx:id="extractIfsField" maxWidth="Infinity"
+                                   promptText="Drop an IFS image here, or use Browse..."
+                                   GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                        <Button text="Browse..." onAction="#onBrowseExtractIfs" maxWidth="Infinity"
+                                GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+
+                        <Label text="Output Directory:" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                               styleClass="form-label"/>
+                        <TextField fx:id="extractDirField" maxWidth="Infinity"
+                                   promptText="Directory where files will be extracted..."
+                                   GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                        <Button text="Browse..." onAction="#onBrowseExtractDir" maxWidth="Infinity"
+                                GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+                    </GridPane>
+
+                    <!-- Pre-extract hooks (shown only when hooks are present) -->
+                    <VBox fx:id="preExtractHooksPane" spacing="6" visible="false" managed="false">
+                        <Label text="Pre-extract hooks:" styleClass="form-label"/>
+                        <VBox fx:id="preExtractHooksList" styleClass="hooks-list" spacing="4"/>
+                    </VBox>
+
+                    <!-- Post-extract hooks (shown only when hooks are present) -->
+                    <VBox fx:id="postExtractHooksPane" spacing="6" visible="false" managed="false">
+                        <Label text="Post-extract hooks:" styleClass="form-label"/>
+                        <VBox fx:id="postExtractHooksList" styleClass="hooks-list" spacing="4"/>
+                    </VBox>
+
+                    <Button fx:id="extractBtn" text="Extract" onAction="#onExtract"
+                            styleClass="primary-btn" disable="true"/>
+
+                    <!-- Progress area: revealed when operation starts -->
+                    <VBox fx:id="extractProgressArea" spacing="6" visible="false" managed="false">
+                        <ProgressBar fx:id="extractProgressBar" maxWidth="Infinity" progress="-1"/>
+                        <Label fx:id="extractStatusLabel" styleClass="op-status" wrapText="true"/>
+                    </VBox>
+
+                    <!-- Log area: grows to fill remaining space -->
+                    <VBox fx:id="extractLogPane" spacing="4" VBox.vgrow="ALWAYS"
+                          visible="false" managed="false">
+                        <Label text="Output" styleClass="form-label"/>
+                        <TextArea fx:id="extractLogArea" editable="false" wrapText="false"
+                                  VBox.vgrow="ALWAYS" styleClass="log-area"/>
+                    </VBox>
+
+                </VBox>
+            </Tab>
+
+            <!-- ═══════════════════ PACK TAB ═══════════════════ -->
+            <Tab text="Pack" closable="false">
+                <VBox styleClass="operation-tab" spacing="16">
+                    <padding><Insets top="24" right="28" bottom="16" left="28"/></padding>
+
+                    <Label text="Pack Directory to IFS" styleClass="tab-heading"/>
+
+                    <GridPane hgap="12" vgap="12">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="150" maxWidth="150" halignment="RIGHT"/>
+                            <ColumnConstraints hgrow="ALWAYS" fillWidth="true"/>
+                            <ColumnConstraints minWidth="90" maxWidth="90"/>
+                        </columnConstraints>
+
+                        <Label text="Source Directory:" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                               styleClass="form-label"/>
+                        <TextField fx:id="packDirField" maxWidth="Infinity"
+                                   promptText="Drop an extracted directory here, or use Browse..."
+                                   GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                        <Button text="Browse..." onAction="#onBrowsePackDir" maxWidth="Infinity"
+                                GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+
+                        <Label text="Output IFS:" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                               styleClass="form-label"/>
+                        <TextField fx:id="packIfsField" maxWidth="Infinity"
+                                   promptText="Path for the output IFS image..."
+                                   GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                        <Button text="Browse..." onAction="#onBrowsePackIfs" maxWidth="Infinity"
+                                GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+                    </GridPane>
+
+                    <!-- Pre-pack hooks (shown only when hooks are present) -->
+                    <VBox fx:id="prePackHooksPane" spacing="6" visible="false" managed="false">
+                        <Label text="Pre-pack hooks:" styleClass="form-label"/>
+                        <VBox fx:id="prePackHooksList" styleClass="hooks-list" spacing="4"/>
+                    </VBox>
+
+                    <!-- Post-pack hooks (shown only when hooks are present) -->
+                    <VBox fx:id="postPackHooksPane" spacing="6" visible="false" managed="false">
+                        <Label text="Post-pack hooks:" styleClass="form-label"/>
+                        <VBox fx:id="postPackHooksList" styleClass="hooks-list" spacing="4"/>
+                    </VBox>
+
+                    <Button fx:id="packBtn" text="Pack" onAction="#onPack"
+                            styleClass="primary-btn" disable="true"/>
+
+                    <!-- Progress area -->
+                    <VBox fx:id="packProgressArea" spacing="6" visible="false" managed="false">
+                        <ProgressBar fx:id="packProgressBar" maxWidth="Infinity" progress="-1"/>
+                        <Label fx:id="packStatusLabel" styleClass="op-status" wrapText="true"/>
+                    </VBox>
+
+                    <!-- Log area -->
+                    <VBox fx:id="packLogPane" spacing="4" VBox.vgrow="ALWAYS"
+                          visible="false" managed="false">
+                        <Label text="Output" styleClass="form-label"/>
+                        <TextArea fx:id="packLogArea" editable="false" wrapText="false"
+                                  VBox.vgrow="ALWAYS" styleClass="log-area"/>
+                    </VBox>
+
+                </VBox>
+            </Tab>
+
+            <!-- ═══════════════════ INSPECT TAB ═══════════════════ -->
+            <Tab fx:id="inspectTab" text="Inspect" closable="false">
+                <SplitPane fx:id="splitPane" dividerPositions="0.4" styleClass="main-split">
+
+                    <!-- Left: filesystem tree -->
+                    <TreeView fx:id="treeView" styleClass="ifs-tree"/>
+
+                    <!-- Right: entry details -->
+                    <VBox spacing="0" styleClass="detail-pane">
+
+                        <Label fx:id="detailTitle"
+                               text="Open an IFS file to inspect  (File menu or drag and drop)"
+                               styleClass="detail-title"/>
+
+                        <GridPane hgap="12" vgap="6" styleClass="detail-grid">
+                            <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+
+                            <Label text="Type:" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                                   styleClass="detail-label"/>
+                            <Label fx:id="detailType" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                            <Label text="Path:" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                                   styleClass="detail-label"/>
+                            <Label fx:id="detailPath" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                                   wrapText="true"/>
+
+                            <Label text="Size:" GridPane.rowIndex="2" GridPane.columnIndex="0"
+                                   styleClass="detail-label"/>
+                            <Label fx:id="detailSize" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                            <Label text="Offset:" GridPane.rowIndex="3" GridPane.columnIndex="0"
+                                   styleClass="detail-label"/>
+                            <Label fx:id="detailOffset" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                            <Label text="Mode:" GridPane.rowIndex="4" GridPane.columnIndex="0"
+                                   styleClass="detail-label"/>
+                            <Label fx:id="detailMode" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                            <Label text="UID/GID:" GridPane.rowIndex="5" GridPane.columnIndex="0"
+                                   styleClass="detail-label"/>
+                            <Label fx:id="detailUidGid" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+                            <Label text="Inode:" GridPane.rowIndex="6" GridPane.columnIndex="0"
+                                   styleClass="detail-label"/>
+                            <Label fx:id="detailInode" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+                            <Label text="Target:" GridPane.rowIndex="7" GridPane.columnIndex="0"
+                                   styleClass="detail-label" fx:id="targetLabel"
+                                   visible="false" managed="false"/>
+                            <Label fx:id="detailTarget" GridPane.rowIndex="7" GridPane.columnIndex="1"
+                                   visible="false" managed="false"/>
+
+                            <Label text="ELF:" GridPane.rowIndex="8" GridPane.columnIndex="0"
+                                   styleClass="detail-label" fx:id="elfLabel"
+                                   visible="false" managed="false"/>
+                            <Label fx:id="detailElf" GridPane.rowIndex="8" GridPane.columnIndex="1"
+                                   visible="false" managed="false" wrapText="true"/>
+
+                        </GridPane>
+
+                        <!-- Script content area (shown only for startup-script entries) -->
+                        <TitledPane fx:id="scriptPane" text="Script Content"
+                                    expanded="false" visible="false" managed="false"
+                                    VBox.vgrow="ALWAYS">
+                            <TextArea fx:id="scriptArea" editable="false"
+                                      style="-fx-font-family: monospace;"/>
+                        </TitledPane>
+                    </VBox>
+                </SplitPane>
+            </Tab>
+
+        </TabPane>
+    </center>
+
+    <!-- Status bar -->
+    <bottom>
+        <HBox styleClass="status-bar" spacing="12">
+            <padding><Insets top="4" right="8" bottom="4" left="8"/></padding>
+            <Label fx:id="statusLabel" text="Ready" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+        </HBox>
+    </bottom>
+</BorderPane>
