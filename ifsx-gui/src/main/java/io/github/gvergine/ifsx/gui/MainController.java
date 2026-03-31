@@ -436,8 +436,10 @@ public class MainController {
         alert.setTitle("About IFSX");
         alert.initOwner(tabPane.getScene().getWindow());
         alert.setHeaderText("IFSX");
+        String version = getClass().getPackage().getImplementationVersion();
         alert.setContentText(
             "IFS Extract / Repack Tool\n"
+            + (version != null ? "Version " + version + "\n" : "")
             + "github.com/gvergine/ifsx\n"
             + "Apache License 2.0");
         var iconStream = getClass().getResourceAsStream("ifsx.png");

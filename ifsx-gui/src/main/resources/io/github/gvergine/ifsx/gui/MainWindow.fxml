@@ -27,6 +27,77 @@
     <center>
         <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE">
 
+            <!-- ═══════════════════ INSPECT TAB ═══════════════════ -->
+            <Tab fx:id="inspectTab" text="Inspect" closable="false">
+                <SplitPane fx:id="splitPane" dividerPositions="0.4" styleClass="main-split">
+
+                    <!-- Left: filesystem tree -->
+                    <TreeView fx:id="treeView" styleClass="ifs-tree"/>
+
+                    <!-- Right: entry details -->
+                    <VBox spacing="0" styleClass="detail-pane">
+
+                        <Label fx:id="detailTitle"
+                               text="Open an IFS file to inspect  (File menu or drag and drop)"
+                               styleClass="detail-title"/>
+
+                        <GridPane hgap="12" vgap="6" styleClass="detail-grid">
+                            <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+
+                            <Label text="Type:" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                                   styleClass="detail-label"/>
+                            <Label fx:id="detailType" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                            <Label text="Path:" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                                   styleClass="detail-label"/>
+                            <Label fx:id="detailPath" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                                   wrapText="true"/>
+
+                            <Label text="Size:" GridPane.rowIndex="2" GridPane.columnIndex="0"
+                                   styleClass="detail-label"/>
+                            <Label fx:id="detailSize" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                            <Label text="Offset:" GridPane.rowIndex="3" GridPane.columnIndex="0"
+                                   styleClass="detail-label"/>
+                            <Label fx:id="detailOffset" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                            <Label text="Mode:" GridPane.rowIndex="4" GridPane.columnIndex="0"
+                                   styleClass="detail-label"/>
+                            <Label fx:id="detailMode" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                            <Label text="UID/GID:" GridPane.rowIndex="5" GridPane.columnIndex="0"
+                                   styleClass="detail-label"/>
+                            <Label fx:id="detailUidGid" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+                            <Label text="Inode:" GridPane.rowIndex="6" GridPane.columnIndex="0"
+                                   styleClass="detail-label"/>
+                            <Label fx:id="detailInode" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+                            <Label text="Target:" GridPane.rowIndex="7" GridPane.columnIndex="0"
+                                   styleClass="detail-label" fx:id="targetLabel"
+                                   visible="false" managed="false"/>
+                            <Label fx:id="detailTarget" GridPane.rowIndex="7" GridPane.columnIndex="1"
+                                   visible="false" managed="false"/>
+
+                            <Label text="ELF:" GridPane.rowIndex="8" GridPane.columnIndex="0"
+                                   styleClass="detail-label" fx:id="elfLabel"
+                                   visible="false" managed="false"/>
+                            <Label fx:id="detailElf" GridPane.rowIndex="8" GridPane.columnIndex="1"
+                                   visible="false" managed="false" wrapText="true"/>
+
+                        </GridPane>
+
+                        <!-- Script content area (shown only for startup-script entries) -->
+                        <TitledPane fx:id="scriptPane" text="Script Content"
+                                    expanded="false" visible="false" managed="false"
+                                    VBox.vgrow="ALWAYS">
+                            <TextArea fx:id="scriptArea" editable="false"
+                                      style="-fx-font-family: monospace;"/>
+                        </TitledPane>
+                    </VBox>
+                </SplitPane>
+            </Tab>
+
             <!-- ═══════════════════ EXTRACT TAB ═══════════════════ -->
             <Tab text="Extract" closable="false">
                 <VBox styleClass="operation-tab" spacing="16">
@@ -153,75 +224,64 @@
                 </VBox>
             </Tab>
 
-            <!-- ═══════════════════ INSPECT TAB ═══════════════════ -->
-            <Tab fx:id="inspectTab" text="Inspect" closable="false">
-                <SplitPane fx:id="splitPane" dividerPositions="0.4" styleClass="main-split">
+            <!-- ═══════════════════ HELP TAB ═══════════════════ -->
+            <Tab text="Help" closable="false">
+                <ScrollPane fitToWidth="true" styleClass="help-tab" hbarPolicy="NEVER">
+                    <VBox spacing="6" styleClass="operation-tab">
+                        <padding><Insets top="24" right="36" bottom="24" left="36"/></padding>
 
-                    <!-- Left: filesystem tree -->
-                    <TreeView fx:id="treeView" styleClass="ifs-tree"/>
+                        <Label text="IFSX Help" styleClass="tab-heading"/>
+                        <Separator/>
 
-                    <!-- Right: entry details -->
-                    <VBox spacing="0" styleClass="detail-pane">
+                        <!-- Inspect -->
+                        <Label text="Inspect" styleClass="help-section-title"/>
+                        <Label wrapText="true" styleClass="help-body"
+                               text="Browse the contents of an IFS image without extracting it."/>
+                        <Label wrapText="true" styleClass="help-body"
+                               text="Open an image via File › Open IFS for Inspection… (Ctrl+O) or drag-and-drop a file onto the tree. Click any entry to see its type, path, size, offset, permissions, and UID/GID. Symlink targets, ELF metadata, and startup-script content are shown for the relevant entry types."/>
+                        <Separator/>
 
-                        <Label fx:id="detailTitle"
-                               text="Open an IFS file to inspect  (File menu or drag and drop)"
-                               styleClass="detail-title"/>
+                        <!-- Extract -->
+                        <Label text="Extract" styleClass="help-section-title"/>
+                        <Label wrapText="true" styleClass="help-body"
+                               text="Load an IFS image and unpack its contents to a directory."/>
+                        <Label wrapText="true" styleClass="help-body"
+                               text="1.  IFS Image — type a path, click Browse…, or drag-and-drop an .ifs / .bin file onto the field. The output directory is suggested automatically."/>
+                        <Label wrapText="true" styleClass="help-body"
+                               text="2.  Output Directory — where the extracted files will be written."/>
+                        <Label wrapText="true" styleClass="help-body"
+                               text="3.  Hooks — if pre- or post-extract hook scripts are installed they appear as checkboxes; tick the ones you want to run."/>
+                        <Label wrapText="true" styleClass="help-body"
+                               text="4.  Click Extract. Progress and the tool log are shown below the button."/>
+                        <Separator/>
 
-                        <GridPane hgap="12" vgap="6" styleClass="detail-grid">
-                            <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+                        <!-- Pack -->
+                        <Label text="Pack" styleClass="help-section-title"/>
+                        <Label wrapText="true" styleClass="help-body"
+                               text="Repack an extracted directory back into an IFS image."/>
+                        <Label wrapText="true" styleClass="help-body"
+                               text="1.  Source Directory — must contain the _ifsx.build descriptor written during a previous extraction. Drag-and-drop the directory onto the field or use Browse…."/>
+                        <Label wrapText="true" styleClass="help-body"
+                               text="2.  Output IFS — path for the resulting image file."/>
+                        <Label wrapText="true" styleClass="help-body"
+                               text="3.  Hooks — same as for Extract; select pre- or post-pack hooks as needed."/>
+                        <Label wrapText="true" styleClass="help-body"
+                               text="4.  Click Pack."/>
+                        <Separator/>
 
-                            <Label text="Type:" GridPane.rowIndex="0" GridPane.columnIndex="0"
-                                   styleClass="detail-label"/>
-                            <Label fx:id="detailType" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                        <!-- Hooks -->
+                        <Label text="Hooks" styleClass="help-section-title"/>
+                        <Label wrapText="true" styleClass="help-body"
+                               text="Hooks are executable scripts that run automatically before or after Extract and Pack operations. Place them in the corresponding subdirectory under your home directory:"/>
+                        <Label styleClass="help-code" text="~/.ifsx/hooks/pre-extract/"/>
+                        <Label styleClass="help-code" text="~/.ifsx/hooks/post-extract/"/>
+                        <Label styleClass="help-code" text="~/.ifsx/hooks/pre-pack/"/>
+                        <Label styleClass="help-code" text="~/.ifsx/hooks/post-pack/"/>
+                        <Label wrapText="true" styleClass="help-body"
+                               text="Each script receives the IFS file path and the directory as arguments and must be executable (chmod +x)."/>
 
-                            <Label text="Path:" GridPane.rowIndex="1" GridPane.columnIndex="0"
-                                   styleClass="detail-label"/>
-                            <Label fx:id="detailPath" GridPane.rowIndex="1" GridPane.columnIndex="1"
-                                   wrapText="true"/>
-
-                            <Label text="Size:" GridPane.rowIndex="2" GridPane.columnIndex="0"
-                                   styleClass="detail-label"/>
-                            <Label fx:id="detailSize" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-
-                            <Label text="Offset:" GridPane.rowIndex="3" GridPane.columnIndex="0"
-                                   styleClass="detail-label"/>
-                            <Label fx:id="detailOffset" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-
-                            <Label text="Mode:" GridPane.rowIndex="4" GridPane.columnIndex="0"
-                                   styleClass="detail-label"/>
-                            <Label fx:id="detailMode" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
-
-                            <Label text="UID/GID:" GridPane.rowIndex="5" GridPane.columnIndex="0"
-                                   styleClass="detail-label"/>
-                            <Label fx:id="detailUidGid" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
-
-                            <Label text="Inode:" GridPane.rowIndex="6" GridPane.columnIndex="0"
-                                   styleClass="detail-label"/>
-                            <Label fx:id="detailInode" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
-
-                            <Label text="Target:" GridPane.rowIndex="7" GridPane.columnIndex="0"
-                                   styleClass="detail-label" fx:id="targetLabel"
-                                   visible="false" managed="false"/>
-                            <Label fx:id="detailTarget" GridPane.rowIndex="7" GridPane.columnIndex="1"
-                                   visible="false" managed="false"/>
-
-                            <Label text="ELF:" GridPane.rowIndex="8" GridPane.columnIndex="0"
-                                   styleClass="detail-label" fx:id="elfLabel"
-                                   visible="false" managed="false"/>
-                            <Label fx:id="detailElf" GridPane.rowIndex="8" GridPane.columnIndex="1"
-                                   visible="false" managed="false" wrapText="true"/>
-
-                        </GridPane>
-
-                        <!-- Script content area (shown only for startup-script entries) -->
-                        <TitledPane fx:id="scriptPane" text="Script Content"
-                                    expanded="false" visible="false" managed="false"
-                                    VBox.vgrow="ALWAYS">
-                            <TextArea fx:id="scriptArea" editable="false"
-                                      style="-fx-font-family: monospace;"/>
-                        </TitledPane>
                     </VBox>
-                </SplitPane>
+                </ScrollPane>
             </Tab>
 
         </TabPane>

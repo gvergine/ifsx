@@ -8,9 +8,17 @@ import picocli.CommandLine;
     name = "ifsx",
     description = "IFS Extract/Repack Tool",
     mixinStandardHelpOptions = true,
-    version = "ifsx 0.1.0",
+    versionProvider = Main.VersionProvider.class,
     subcommands = { ExtractCommand.class, PackCommand.class })
 public class Main implements Runnable {
+
+    static class VersionProvider implements CommandLine.IVersionProvider {
+        @Override
+        public String[] getVersion() {
+            String v = Main.class.getPackage().getImplementationVersion();
+            return new String[]{ "ifsx " + (v != null ? v : "unknown") };
+        }
+    }
 
     @Override
     public void run() { CommandLine.usage(this, System.out); }

@@ -54,7 +54,7 @@ public class BuildfileGenerator {
              // Entries without offset (dirs, symlinks) keep original order
              if (offA == -1 && offB == -1) return Integer.compare(a.getOrderIndex(), b.getOrderIndex());
              if (offA == -1) return -1;
-             if (offB == -1) return -1;
+             if (offB == -1) return 1;
              return Long.compare(offA, offB);
          });
          for (IfsEntry entry : sorted) writeEntry(pw, entry, seen);

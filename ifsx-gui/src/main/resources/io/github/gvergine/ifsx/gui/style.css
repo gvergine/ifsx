@@ -83,6 +83,30 @@
     -fx-background-radius: 3;
 }
 
+/* ── Help tab ── */
+.help-tab {
+    -fx-background-color: #fafafa;
+}
+
+.help-section-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0078d4;
+    -fx-padding: 8 0 2 0;
+}
+
+.help-body {
+    -fx-text-fill: #333;
+    -fx-line-spacing: 2;
+}
+
+.help-code {
+    -fx-font-family: monospace;
+    -fx-font-size: 12px;
+    -fx-text-fill: #555;
+    -fx-padding: 0 0 0 12;
+}
+
 /* ── Status bar ── */
 .status-bar {
     -fx-background-color: #e0e0e0;

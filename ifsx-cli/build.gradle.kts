@@ -12,6 +12,17 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:${property("junitVersion")}")
 }
 
+tasks.jar {
+    manifest { attributes("Implementation-Version" to project.version) }
+}
+
+tasks.register<Copy>("generateManpage") {
+    from("src/dist/man")
+    into(layout.buildDirectory.dir("man"))
+    filter<org.apache.tools.ant.filters.ReplaceTokens>(
+        "tokens" to mapOf("VERSION" to project.version.toString()))
+}
+
 // Minimal JRE for the CLI: excludes java.desktop (and therefore libasound2/libX11/etc.)
 // jdk.unsupported is needed by picocli (sun.misc.Unsafe reflection).
 tasks.register<Exec>("jlinkCliRuntime") {
@@ -31,12 +42,12 @@ tasks.register<Exec>("jlinkCliRuntime") {
 val platform = if (System.getProperty("os.name").lowercase().contains("win")) "win" else "linux"
 
 tasks.named<Zip>("distZip") {
-    archiveBaseName.set("${project.name}-$platform")
+    archiveBaseName.set("ifsx-$platform")
 }
 
 // Native installer via jpackage
 tasks.register<Exec>("jpackage") {
-    dependsOn("jlinkCliRuntime", "installDist")
+    dependsOn("jlinkCliRuntime", "installDist", "generateManpage")
     val installDir = layout.buildDirectory.dir("install/ifsx-cli")
     val outputDir  = layout.buildDirectory.dir("jpackage")
     val jreDir     = layout.buildDirectory.dir("jre-cli")
@@ -66,8 +77,8 @@ tasks.register<Exec>("jpackage") {
         add(if (isWindows) "--win-shortcut" else "--linux-shortcut")
         val iconFile = if (isWindows) rootProject.file("icons/ifsx.ico") else rootProject.file("icons/ifsx.png")
         if (iconFile.exists()) { add("--icon"); add(iconFile.absolutePath) }
-        // Bundle manpage in the app image
-        add("--app-content"); add(file("src/dist/man").absolutePath)
+        // Bundle manpage in the app image (version token already replaced by generateManpage)
+        add("--app-content"); add(layout.buildDirectory.dir("man").get().asFile.absolutePath)
         // Post-install/pre-remove scripts for manpage + symlink
         if (isLinux) {
             add("--linux-deb-maintainer"); add("verginegiovanni@gmail.com")
@@ -87,7 +98,7 @@ tasks.register<Exec>("jpackage") {
             val newName = if (isWindows)
                 f.name.replaceFirst(Regex("-(\\d)"), "-$platform-$1")
             else
-                f.name.replaceFirst(Regex("_(\\d)"), "-${platform}_$1")
+                f.name.replaceFirst(Regex("_(\\d)"), "-${platform}_$1").replace('_', '-')
             if (newName != f.name) f.renameTo(File(outDir, newName))
         }
     }

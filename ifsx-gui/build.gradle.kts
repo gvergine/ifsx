@@ -16,6 +16,10 @@ dependencies {
     implementation(project(":ifsx-core"))
 }
 
+tasks.jar {
+    manifest { attributes("Implementation-Version" to project.version) }
+}
+
 val platform = if (System.getProperty("os.name").lowercase().contains("win")) "win" else "linux"
 
 tasks.named<Zip>("distZip") {
@@ -68,7 +72,7 @@ tasks.register<Exec>("jpackage") {
             val newName = if (isWindows)
                 f.name.replaceFirst(Regex("-(\\d)"), "-$platform-$1")
             else
-                f.name.replaceFirst(Regex("_(\\d)"), "-${platform}_$1")
+                f.name.replaceFirst(Regex("_(\\d)"), "-${platform}_$1").replace('_', '-')
             if (newName != f.name) f.renameTo(File(outDir, newName))
         }
     }

@@ -15,11 +15,11 @@ Cross-platform tool for inspecting, extracting, and repacking QNX IFS
 ## Requirements
 
 - Java 17+
-- QNX SDP (`dumpifs`, `mkifs`) on PATH or configured
+- QNX SDP configured and sourced
 
 ## Build all
 
-    ./gradlew build install
+    ./gradlew clean release
 
 ## CLI
 
@@ -62,7 +62,6 @@ for file in `find $2 -name "*.ifs"`; do
     ifsx extract $file --post-extract=recursive.sh ${file}_extracted
 done
 ```
-
 
 ## Configuration
 

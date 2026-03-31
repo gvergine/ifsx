@@ -119,6 +119,7 @@ public class IfsExtractor {
             // First occurrence — always extract to the canonical destination.
             Files.createDirectories(dest.getParent());
             executor.runDumpIfsExtractFile(ifsPath, outputDir, path);
+            fixDotfilePath(dest, lineConsumer);
             emit(lineConsumer, "  + " + path);
             return;
         }
@@ -126,9 +127,29 @@ public class IfsExtractor {
         // Duplicate (occurrence >= 2) — always overwrite, emit a warning.
         emit(lineConsumer, "  WARNING: duplicate entry dup" + occurrence + ": " + path + " — overwriting");
         executor.runDumpIfsExtractFile(ifsPath, outputDir, path);
+        fixDotfilePath(dest, lineConsumer);
     }
 
     // ── helpers ────────────────────────────────────────────────────────────
+
+    /**
+     * dumpifs drops the directory separator before dot-prefixed filenames:
+     *   proc/boot/.init_script  →  proc/boot.init_script
+     * If the expected destination is missing and its name starts with '.',
+     * look for the mangled path and move the file to the correct location.
+     */
+    private static void fixDotfilePath(Path dest, Consumer<String> lineConsumer) throws IOException {
+        if (Files.exists(dest)) return;
+        String filename = dest.getFileName().toString();
+        if (!filename.startsWith(".")) return;
+        Path mangled = dest.getParent().getParent()
+                           .resolve(dest.getParent().getFileName().toString() + filename);
+        if (Files.exists(mangled)) {
+            Files.createDirectories(dest.getParent());
+            Files.move(mangled, dest);
+            emit(lineConsumer, "  (fixed dotfile path: " + mangled.getFileName() + " → " + dest + ")");
+        }
+    }
 
     private void createSymlink(Path outputDir, String path, String target,
                                 Consumer<String> lineConsumer) {

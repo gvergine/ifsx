@@ -1,4 +1,4 @@
-%% IFSX(1) ifsx 0.1.0
+%% IFSX(1) ifsx @VERSION@
 %% Giovanni Vergine
 %% 2026
 
