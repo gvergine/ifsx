@@ -98,7 +98,12 @@ public class SdpToolExecutor {
         ProcessBuilder pb = new ProcessBuilder(cmd);
         if (workDir != null) {
             pb.directory(workDir.toFile());
-            pb.environment().put("MKIFS_PATH", workDir.toAbsolutePath().toString());
+            if (lineConsumer != null) lineConsumer.accept("[workdir] " + workDir.toAbsolutePath());
+            String abs = workDir.toAbsolutePath().toString();
+            String existing = pb.environment().get("MKIFS_PATH");
+            String mkifsPath = existing != null && !existing.isBlank() ? abs + File.pathSeparator + existing : abs;
+            pb.environment().put("MKIFS_PATH", mkifsPath);
+            if (lineConsumer != null) lineConsumer.accept("[MKIFS_PATH] " + mkifsPath);
         }
         pb.redirectErrorStream(true);
         Process proc = pb.start();
