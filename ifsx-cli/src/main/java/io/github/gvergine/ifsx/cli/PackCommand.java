@@ -25,12 +25,12 @@ public class PackCommand implements Callable<Integer> {
     private String outputIfs;
 
     @Option(names = "--pre-pack",
-            description = "Name of a hook in ~/.ifsx/pre-pack/ to run before packing (repeatable)",
+            description = "Name of a hook in ~/.ifsx/hooks/pre-pack/ to run before packing (repeatable)",
             paramLabel = "<hook>")
     private List<String> prePackHooks = new ArrayList<>();
 
     @Option(names = "--post-pack",
-            description = "Name of a hook in ~/.ifsx/post-pack/ to run after packing (repeatable)",
+            description = "Name of a hook in ~/.ifsx/hooks/post-pack/ to run after packing (repeatable)",
             paramLabel = "<hook>")
     private List<String> postPackHooks = new ArrayList<>();
 

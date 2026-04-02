@@ -22,7 +22,7 @@ QNX Software Development Platform (SDP).
 Both tools must be present in **PATH** before invoking **ifsx** — source the
 QNX SDP environment script first (e.g. **source ~/qnx800/qnxsdp-env.sh**).
 
-At startup **ifsx** creates **~/.ifsx/** and its four subdirectories
+At startup **ifsx** creates **~/.ifsx/hooks/** and its four subdirectories
 (**pre-extract**, **post-extract**, **pre-pack**, **post-pack**) if they do
 not already exist. Executable files placed in those directories are available
 as *hooks* (see **HOOKS** below).
@@ -53,13 +53,13 @@ as *hooks* (see **HOOKS** below).
     The directory is created if it does not exist.
 
 **--pre-extract** *hook*
-:   Name of an executable in **~/.ifsx/pre-extract/** to run before extraction.
+:   Name of an executable in **~/.ifsx/hooks/pre-extract/** to run before extraction.
     May be repeated; hooks are executed in the order given on the command line.
     Each hook receives *image.ifs* and *output-dir* as positional arguments.
     A non-zero exit code aborts the operation.
 
 **--post-extract** *hook*
-:   Name of an executable in **~/.ifsx/post-extract/** to run after extraction.
+:   Name of an executable in **~/.ifsx/hooks/post-extract/** to run after extraction.
     Same semantics as **--pre-extract**.
 
 ## pack
@@ -75,20 +75,20 @@ as *hooks* (see **HOOKS** below).
     Defaults to *extracted-dir* with **.ifs** appended.
 
 **--pre-pack** *hook*
-:   Name of an executable in **~/.ifsx/pre-pack/** to run before packing.
+:   Name of an executable in **~/.ifsx/hooks/pre-pack/** to run before packing.
     May be repeated; hooks are executed in the order given on the command line.
     Each hook receives *output.ifs* and *extracted-dir* as positional arguments.
     A non-zero exit code aborts the operation.
 
 **--post-pack** *hook*
-:   Name of an executable in **~/.ifsx/post-pack/** to run after packing.
+:   Name of an executable in **~/.ifsx/hooks/post-pack/** to run after packing.
     Same semantics as **--pre-pack**.
 
 # HOOKS
 
-**ifsx** supports user-defined hook executables stored under **~/.ifsx/**:
+**ifsx** supports user-defined hook executables stored under **~/.ifsx/hooks/**:
 
-    ~/.ifsx/
+    ~/.ifsx/hooks/
         pre-extract/    run before extraction
         post-extract/   run after extraction
         pre-pack/       run before packing

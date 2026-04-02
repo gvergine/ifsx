@@ -34,10 +34,10 @@ See [ifsx-gui/docs/user-guide.md](ifsx-gui/docs/user-guide.md) for usage.
 ## Hooks
 
 User-defined hook executables can run before or after each operation.
-Place executables in the appropriate subdirectory of `~/.ifsx/`:
+Place executables in the appropriate subdirectory of `~/.ifsx/hooks/`:
 
 ```
-~/.ifsx/
+~/.ifsx/hooks/
     pre-extract/    run before extraction
     post-extract/   run after extraction
     pre-pack/       run before packing

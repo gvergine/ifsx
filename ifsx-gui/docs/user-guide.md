@@ -90,10 +90,10 @@ IFSX supports user-defined hook executables that run before or after extract and
 
 ### Directory structure
 
-At startup IFSX creates `~/.ifsx/` and its four subdirectories if they do not already exist:
+At startup IFSX creates `~/.ifsx/hooks/` and its four subdirectories if they do not already exist:
 
 ```
-~/.ifsx/
+~/.ifsx/hooks/
     pre-extract/    run before extraction
     post-extract/   run after extraction
     pre-pack/       run before packing

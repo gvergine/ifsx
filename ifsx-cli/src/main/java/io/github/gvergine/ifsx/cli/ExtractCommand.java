@@ -24,12 +24,12 @@ public class ExtractCommand implements Callable<Integer> {
     private Path outputDir;
 
     @Option(names = "--pre-extract",
-            description = "Name of a hook in ~/.ifsx/pre-extract/ to run before extraction (repeatable)",
+            description = "Name of a hook in ~/.ifsx/hooks/pre-extract/ to run before extraction (repeatable)",
             paramLabel = "<hook>")
     private List<String> preExtractHooks = new ArrayList<>();
 
     @Option(names = "--post-extract",
-            description = "Name of a hook in ~/.ifsx/post-extract/ to run after extraction (repeatable)",
+            description = "Name of a hook in ~/.ifsx/hooks/post-extract/ to run after extraction (repeatable)",
             paramLabel = "<hook>")
     private List<String> postExtractHooks = new ArrayList<>();
 

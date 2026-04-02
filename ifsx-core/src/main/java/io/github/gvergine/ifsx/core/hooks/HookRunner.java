@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * Discovers and executes user-defined hook executables from ~/.ifsx/<phase>/.
+ * Discovers and executes user-defined hook executables from ~/.ifsx/hooks/<phase>/.
  *
  * Hooks are called with two arguments: <ifsPath> <directory>.
  * stdout and stderr are merged and streamed to the provided lineConsumer.
@@ -25,7 +25,7 @@ public class HookRunner {
     public static final String POST_PACK    = "post-pack";
 
     /**
-     * Creates ~/.ifsx/ and all four phase subdirectories if they do not already exist.
+     * Creates ~/.ifsx/hooks/ and all four phase subdirectories if they do not already exist.
      * Silently ignores failures (e.g. read-only home directory).
      */
     public static void ensureDirectories() {
@@ -37,7 +37,7 @@ public class HookRunner {
         }
     }
 
-    /** Returns executable file names in ~/.ifsx/<phase>/, sorted alphabetically. */
+    /** Returns executable file names in ~/.ifsx/hooks/<phase>/, sorted alphabetically. */
     public static List<String> availableHooks(String phase) {
         Path dir = hooksDir(phase);
         if (!Files.isDirectory(dir)) return Collections.emptyList();
@@ -106,7 +106,7 @@ public class HookRunner {
     }
 
     private static Path hooksDir(String phase) {
-        return Path.of(System.getProperty("user.home"), ".ifsx", phase);
+        return Path.of(System.getProperty("user.home"), ".ifsx", "hooks", phase);
     }
 
     private static void emit(Consumer<String> consumer, String message) {

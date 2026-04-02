@@ -46,7 +46,7 @@ Warning: dumpifs and/or mkifs not found. Did you source the SDP?
 At startup
 .B ifsx
 creates
-.B ~/.ifsx/
+.B ~/.ifsx/hooks/
 and its four subdirectories
 .RI ( pre-extract ,
 .IR post-extract ,
@@ -84,7 +84,7 @@ Created if it does not exist.
 .TP
 \fB\-\-pre\-extract\fR \fIhook\fR
 Name of an executable in
-.B ~/.ifsx/pre-extract/
+.B ~/.ifsx/hooks/pre-extract/
 to run before extraction. May be repeated; hooks execute in the order
 given on the command line. Each hook receives
 .I image.ifs
@@ -94,7 +94,7 @@ as positional arguments. A non-zero exit code aborts the operation.
 .TP
 \fB\-\-post\-extract\fR \fIhook\fR
 Name of an executable in
-.B ~/.ifsx/post-extract/
+.B ~/.ifsx/hooks/post-extract/
 to run after extraction. Same semantics as
 .BR \-\-pre\-extract .
 .SS "pack"
@@ -115,7 +115,7 @@ appended.
 .TP
 \fB\-\-pre\-pack\fR \fIhook\fR
 Name of an executable in
-.B ~/.ifsx/pre-pack/
+.B ~/.ifsx/hooks/pre-pack/
 to run before packing. May be repeated; hooks execute in the order
 given on the command line. Each hook receives
 .I output.ifs
@@ -125,17 +125,17 @@ as positional arguments. A non-zero exit code aborts the operation.
 .TP
 \fB\-\-post\-pack\fR \fIhook\fR
 Name of an executable in
-.B ~/.ifsx/post-pack/
+.B ~/.ifsx/hooks/post-pack/
 to run after packing. Same semantics as
 .BR \-\-pre\-pack .
 .SH HOOKS
 .B ifsx
 supports user-defined hook executables stored under
-.BR ~/.ifsx/ :
+.BR ~/.ifsx/hooks/ :
 .PP
 .RS
 .nf
-~/.ifsx/
+~/.ifsx/hooks/hooks/
     pre-extract/    run before extraction
     post-extract/   run after extraction
     pre-pack/       run before packing
